@@ -336,7 +336,7 @@ float RendererEnvironmentStorage::environment_get_fog_depth_end(RID p_env) const
 
 // Volumetric Fog
 
-void RendererEnvironmentStorage::environment_set_volumetric_fog(RID p_env, bool p_enable, float p_density, const Color &p_albedo, const Color &p_emission, float p_emission_energy, float p_anisotropy, float p_length, float p_detail_spread, float p_gi_inject, bool p_temporal_reprojection, float p_temporal_reprojection_amount, float p_ambient_inject, float p_sky_affect) {
+void RendererEnvironmentStorage::environment_set_volumetric_fog(RID p_env, bool p_enable, float p_density, const Color &p_albedo, const Color &p_emission, float p_emission_energy, float p_anisotropy, float p_length, float p_detail_spread, float p_gi_inject, bool p_temporal_reprojection, float p_temporal_reprojection_amount, float p_ambient_inject, float p_sky_affect, bool p_detail_enabled, RID p_detail_density_map, float p_detail_density_map_strength, const Vector3 &p_detail_density_map_offset, const Vector3 &p_detail_density_map_scale) {
 	Environment *env = environment_owner.get_or_null(p_env);
 	ERR_FAIL_NULL(env);
 #ifdef DEBUG_ENABLED
@@ -357,6 +357,11 @@ void RendererEnvironmentStorage::environment_set_volumetric_fog(RID p_env, bool 
 	env->volumetric_fog_temporal_reprojection_amount = p_temporal_reprojection_amount;
 	env->volumetric_fog_ambient_inject = p_ambient_inject;
 	env->volumetric_fog_sky_affect = p_sky_affect;
+	env->volumetric_fog_detail_enabled = p_detail_enabled;
+	env->volumetric_fog_detail_density_map = p_detail_density_map;
+	env->volumetric_fog_detail_density_map_strength = p_detail_density_map_strength;
+	env->volumetric_fog_detail_density_map_offset = p_detail_density_map_offset;
+	env->volumetric_fog_detail_density_map_scale = p_detail_density_map_scale;
 }
 
 bool RendererEnvironmentStorage::environment_get_volumetric_fog_enabled(RID p_env) const {
@@ -435,6 +440,36 @@ float RendererEnvironmentStorage::environment_get_volumetric_fog_ambient_inject(
 	Environment *env = environment_owner.get_or_null(p_env);
 	ERR_FAIL_NULL_V(env, 0.0);
 	return env->volumetric_fog_ambient_inject;
+}
+
+bool RendererEnvironmentStorage::environment_get_volumetric_fog_detail_enabled(RID p_env) const {
+	Environment *env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_NULL_V(env, false);
+	return env->volumetric_fog_detail_enabled;
+}
+
+RID RendererEnvironmentStorage::environment_get_volumetric_fog_detail_density_map(RID p_env) const {
+	Environment *env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_NULL_V(env, RID());
+	return env->volumetric_fog_detail_density_map;
+}
+
+float RendererEnvironmentStorage::environment_get_volumetric_fog_detail_density_map_strength(RID p_env) const {
+	Environment *env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_NULL_V(env, 1.0);
+	return env->volumetric_fog_detail_density_map_strength;
+}
+
+Vector3 RendererEnvironmentStorage::environment_get_volumetric_fog_detail_density_map_offset(RID p_env) const {
+	Environment *env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_NULL_V(env, Vector3());
+	return env->volumetric_fog_detail_density_map_offset;
+}
+
+Vector3 RendererEnvironmentStorage::environment_get_volumetric_fog_detail_density_map_scale(RID p_env) const {
+	Environment *env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_NULL_V(env, Vector3(1, 1, 1));
+	return env->volumetric_fog_detail_density_map_scale;
 }
 
 // GLOW

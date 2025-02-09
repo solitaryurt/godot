@@ -95,6 +95,11 @@ private:
 		float volumetric_fog_sky_affect = 1.0;
 		bool volumetric_fog_temporal_reprojection = true;
 		float volumetric_fog_temporal_reprojection_amount = 0.9;
+		bool volumetric_fog_detail_enabled = false;
+		RID volumetric_fog_detail_density_map;
+		float volumetric_fog_detail_density_map_strength = 1.0;
+		Vector3 volumetric_fog_detail_density_map_offset;
+		Vector3 volumetric_fog_detail_density_map_scale = Vector3(1, 1, 1);
 
 		// Glow
 		bool glow_enabled = false;
@@ -225,7 +230,7 @@ public:
 	float environment_get_fog_depth_end(RID p_env) const;
 
 	// Volumetric Fog
-	void environment_set_volumetric_fog(RID p_env, bool p_enable, float p_density, const Color &p_albedo, const Color &p_emission, float p_emission_energy, float p_anisotropy, float p_length, float p_detail_spread, float p_gi_inject, bool p_temporal_reprojection, float p_temporal_reprojection_amount, float p_ambient_inject, float p_sky_affect);
+	void environment_set_volumetric_fog(RID p_env, bool p_enable, float p_density, const Color &p_albedo, const Color &p_emission, float p_emission_energy, float p_anisotropy, float p_length, float p_detail_spread, float p_gi_inject, bool p_temporal_reprojection, float p_temporal_reprojection_amount, float p_ambient_inject, float p_sky_affect, bool p_detail_enabled, RID p_detail_density_map, float p_detail_density_map_strength, const Vector3 &p_detail_density_map_offset, const Vector3 &p_detail_density_map_scale);
 	bool environment_get_volumetric_fog_enabled(RID p_env) const;
 	float environment_get_volumetric_fog_density(RID p_env) const;
 	Color environment_get_volumetric_fog_scattering(RID p_env) const;
@@ -304,6 +309,14 @@ public:
 	float environment_get_adjustments_saturation(RID p_env) const;
 	bool environment_get_use_1d_color_correction(RID p_env) const;
 	RID environment_get_color_correction(RID p_env) const;
+
+	// Volumetric Fog Detail
+	void environment_set_volumetric_fog_detail(RID p_env, bool p_enable, RID p_density_map, float p_density_map_strength, const Vector3 &p_density_map_offset, const Vector3 &p_density_map_scale);
+	bool environment_get_volumetric_fog_detail_enabled(RID p_env) const;
+	RID environment_get_volumetric_fog_detail_density_map(RID p_env) const;
+	float environment_get_volumetric_fog_detail_density_map_strength(RID p_env) const;
+	Vector3 environment_get_volumetric_fog_detail_density_map_offset(RID p_env) const;
+	Vector3 environment_get_volumetric_fog_detail_density_map_scale(RID p_env) const;
 };
 
 #endif // ENVIRONMENT_STORAGE_H

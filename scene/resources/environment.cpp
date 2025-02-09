@@ -913,7 +913,12 @@ void Environment::_update_volumetric_fog() {
 			volumetric_fog_temporal_reproject,
 			volumetric_fog_temporal_reproject_amount,
 			volumetric_fog_ambient_inject,
-			volumetric_fog_sky_affect);
+			volumetric_fog_sky_affect,
+			volumetric_fog_detail_enabled,
+			volumetric_fog_detail_density_map.is_valid() ? volumetric_fog_detail_density_map->get_rid() : RID(),
+			volumetric_fog_detail_density_map_strength,
+			volumetric_fog_detail_density_map_offset,
+			volumetric_fog_detail_density_map_scale);
 }
 
 void Environment::set_volumetric_fog_enabled(bool p_enable) {
@@ -1014,6 +1019,52 @@ void Environment::set_volumetric_fog_temporal_reprojection_amount(float p_amount
 
 float Environment::get_volumetric_fog_temporal_reprojection_amount() const {
 	return volumetric_fog_temporal_reproject_amount;
+}
+
+void Environment::set_volumetric_fog_detail_enabled(bool p_enabled) {
+	volumetric_fog_detail_enabled = p_enabled;
+	_update_volumetric_fog();
+	notify_property_list_changed();
+}
+
+bool Environment::is_volumetric_fog_detail_enabled() const {
+	return volumetric_fog_detail_enabled;
+}
+
+void Environment::set_volumetric_fog_detail_density_map(const Ref<Texture3D> &p_density_map) {
+	volumetric_fog_detail_density_map = p_density_map;
+	_update_volumetric_fog();
+}
+
+Ref<Texture3D> Environment::get_volumetric_fog_detail_density_map() const {
+	return volumetric_fog_detail_density_map;
+}
+
+void Environment::set_volumetric_fog_detail_density_map_strength(float p_strength) {
+	volumetric_fog_detail_density_map_strength = p_strength;
+	_update_volumetric_fog();
+}
+
+float Environment::get_volumetric_fog_detail_density_map_strength() const {
+	return volumetric_fog_detail_density_map_strength;
+}
+
+void Environment::set_volumetric_fog_detail_density_map_offset(const Vector3 &p_offset) {
+	volumetric_fog_detail_density_map_offset = p_offset;
+	_update_volumetric_fog();
+}
+
+Vector3 Environment::get_volumetric_fog_detail_density_map_offset() const {
+	return volumetric_fog_detail_density_map_offset;
+}
+
+void Environment::set_volumetric_fog_detail_density_map_scale(const Vector3 &p_scale) {
+	volumetric_fog_detail_density_map_scale = p_scale;
+	_update_volumetric_fog();
+}
+
+Vector3 Environment::get_volumetric_fog_detail_density_map_scale() const {
+	return volumetric_fog_detail_density_map_scale;
 }
 
 // Adjustment
@@ -1521,6 +1572,16 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_volumetric_fog_temporal_reprojection_enabled"), &Environment::is_volumetric_fog_temporal_reprojection_enabled);
 	ClassDB::bind_method(D_METHOD("set_volumetric_fog_temporal_reprojection_amount", "temporal_reprojection_amount"), &Environment::set_volumetric_fog_temporal_reprojection_amount);
 	ClassDB::bind_method(D_METHOD("get_volumetric_fog_temporal_reprojection_amount"), &Environment::get_volumetric_fog_temporal_reprojection_amount);
+	ClassDB::bind_method(D_METHOD("set_volumetric_fog_detail_enabled", "enabled"), &Environment::set_volumetric_fog_detail_enabled);
+	ClassDB::bind_method(D_METHOD("is_volumetric_fog_detail_enabled"), &Environment::is_volumetric_fog_detail_enabled);
+	ClassDB::bind_method(D_METHOD("set_volumetric_fog_detail_density_map", "density_map"), &Environment::set_volumetric_fog_detail_density_map);
+	ClassDB::bind_method(D_METHOD("get_volumetric_fog_detail_density_map"), &Environment::get_volumetric_fog_detail_density_map);
+	ClassDB::bind_method(D_METHOD("set_volumetric_fog_detail_density_map_strength", "strength"), &Environment::set_volumetric_fog_detail_density_map_strength);
+	ClassDB::bind_method(D_METHOD("get_volumetric_fog_detail_density_map_strength"), &Environment::get_volumetric_fog_detail_density_map_strength);
+	ClassDB::bind_method(D_METHOD("set_volumetric_fog_detail_density_map_offset", "offset"), &Environment::set_volumetric_fog_detail_density_map_offset);
+	ClassDB::bind_method(D_METHOD("get_volumetric_fog_detail_density_map_offset"), &Environment::get_volumetric_fog_detail_density_map_offset);
+	ClassDB::bind_method(D_METHOD("set_volumetric_fog_detail_density_map_scale", "scale"), &Environment::set_volumetric_fog_detail_density_map_scale);
+	ClassDB::bind_method(D_METHOD("get_volumetric_fog_detail_density_map_scale"), &Environment::get_volumetric_fog_detail_density_map_scale);
 
 	ADD_GROUP("Volumetric Fog", "volumetric_fog_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "volumetric_fog_enabled"), "set_volumetric_fog_enabled", "is_volumetric_fog_enabled");
@@ -1537,6 +1598,12 @@ void Environment::_bind_methods() {
 	ADD_SUBGROUP("Temporal Reprojection", "volumetric_fog_temporal_reprojection_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "volumetric_fog_temporal_reprojection_enabled"), "set_volumetric_fog_temporal_reprojection_enabled", "is_volumetric_fog_temporal_reprojection_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_temporal_reprojection_amount", PROPERTY_HINT_RANGE, "0.5,0.99,0.001"), "set_volumetric_fog_temporal_reprojection_amount", "get_volumetric_fog_temporal_reprojection_amount");
+	ADD_SUBGROUP("Detail", "volumetric_fog_detail_");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "volumetric_fog_detail_enabled"), "set_volumetric_fog_detail_enabled", "is_volumetric_fog_detail_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "volumetric_fog_detail_density_map", PROPERTY_HINT_RESOURCE_TYPE, "Texture3D"), "set_volumetric_fog_detail_density_map", "get_volumetric_fog_detail_density_map");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "volumetric_fog_detail_density_map_strength", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_volumetric_fog_detail_density_map_strength", "get_volumetric_fog_detail_density_map_strength");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "volumetric_fog_detail_density_map_offset"), "set_volumetric_fog_detail_density_map_offset", "get_volumetric_fog_detail_density_map_offset");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "volumetric_fog_detail_density_map_scale"), "set_volumetric_fog_detail_density_map_scale", "get_volumetric_fog_detail_density_map_scale");
 
 	// Adjustment
 

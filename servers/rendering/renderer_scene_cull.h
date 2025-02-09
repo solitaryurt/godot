@@ -1294,7 +1294,7 @@ public:
 	PASS1RC(float, environment_get_fog_depth_end, RID)
 
 	// Volumentric Fog
-	PASS14(environment_set_volumetric_fog, RID, bool, float, const Color &, const Color &, float, float, float, float, float, bool, float, float, float)
+	PASS19(environment_set_volumetric_fog, RID, bool, float, const Color &, const Color &, float, float, float, float, float, bool, float, float, float, bool, RID, float, const Vector3 &, const Vector3 &)
 
 	PASS1RC(bool, environment_get_volumetric_fog_enabled, RID)
 	PASS1RC(float, environment_get_volumetric_fog_density, RID)
@@ -1309,6 +1309,11 @@ public:
 	PASS1RC(bool, environment_get_volumetric_fog_temporal_reprojection, RID)
 	PASS1RC(float, environment_get_volumetric_fog_temporal_reprojection_amount, RID)
 	PASS1RC(float, environment_get_volumetric_fog_ambient_inject, RID)
+	PASS1RC(bool, environment_get_volumetric_fog_detail_enabled, RID)
+	PASS1RC(RID, environment_get_volumetric_fog_detail_density_map, RID)
+	PASS1RC(float, environment_get_volumetric_fog_detail_density_map_strength, RID)
+	PASS1RC(Vector3, environment_get_volumetric_fog_detail_density_map_offset, RID)
+	PASS1RC(Vector3, environment_get_volumetric_fog_detail_density_map_scale, RID)
 
 	// Glow
 	PASS13(environment_set_glow, RID, bool, Vector<float>, float, float, float, float, RS::EnvironmentGlowBlendMode, float, float, float, float, RID)

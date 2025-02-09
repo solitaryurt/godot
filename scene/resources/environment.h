@@ -211,6 +211,11 @@ private:
 	float volumetric_fog_sky_affect = 1.0;
 	bool volumetric_fog_temporal_reproject = true;
 	float volumetric_fog_temporal_reproject_amount = 0.9;
+	bool volumetric_fog_detail_enabled = false;
+	Ref<Texture3D> volumetric_fog_detail_density_map;
+	float volumetric_fog_detail_density_map_strength = 1.0;
+	Vector3 volumetric_fog_detail_density_map_offset;
+	Vector3 volumetric_fog_detail_density_map_scale = Vector3(1, 1, 1);
 	void _update_volumetric_fog();
 
 	// Adjustment
@@ -430,6 +435,16 @@ public:
 	bool is_volumetric_fog_temporal_reprojection_enabled() const;
 	void set_volumetric_fog_temporal_reprojection_amount(float p_amount);
 	float get_volumetric_fog_temporal_reprojection_amount() const;
+	void set_volumetric_fog_detail_enabled(bool p_enabled);
+	bool is_volumetric_fog_detail_enabled() const;
+	void set_volumetric_fog_detail_density_map(const Ref<Texture3D> &p_density_map);
+	Ref<Texture3D> get_volumetric_fog_detail_density_map() const;
+	void set_volumetric_fog_detail_density_map_strength(float p_strength);
+	float get_volumetric_fog_detail_density_map_strength() const;
+	void set_volumetric_fog_detail_density_map_offset(const Vector3 &p_offset);
+	Vector3 get_volumetric_fog_detail_density_map_offset() const;
+	void set_volumetric_fog_detail_density_map_scale(const Vector3 &p_scale);
+	Vector3 get_volumetric_fog_detail_density_map_scale() const;
 
 	// Adjustment
 	void set_adjustment_enabled(bool p_enabled);

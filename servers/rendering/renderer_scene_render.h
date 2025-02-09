@@ -160,7 +160,7 @@ public:
 	float environment_get_fog_depth_end(RID p_env) const;
 
 	// Volumetric Fog
-	void environment_set_volumetric_fog(RID p_env, bool p_enable, float p_density, const Color &p_albedo, const Color &p_emission, float p_emission_energy, float p_anisotropy, float p_length, float p_detail_spread, float p_gi_inject, bool p_temporal_reprojection, float p_temporal_reprojection_amount, float p_ambient_inject, float p_sky_affect);
+	void environment_set_volumetric_fog(RID p_env, bool p_enable, float p_density, const Color &p_albedo, const Color &p_emission, float p_emission_energy, float p_anisotropy, float p_length, float p_detail_spread, float p_gi_inject, bool p_temporal_reprojection, float p_temporal_reprojection_amount, float p_ambient_inject, float p_sky_affect, bool p_detail_enabled, RID p_detail_density_map, float p_detail_density_map_strength, const Vector3 &p_detail_density_map_offset, const Vector3 &p_detail_density_map_scale);
 	bool environment_get_volumetric_fog_enabled(RID p_env) const;
 	float environment_get_volumetric_fog_density(RID p_env) const;
 	Color environment_get_volumetric_fog_scattering(RID p_env) const;
@@ -174,6 +174,11 @@ public:
 	bool environment_get_volumetric_fog_temporal_reprojection(RID p_env) const;
 	float environment_get_volumetric_fog_temporal_reprojection_amount(RID p_env) const;
 	float environment_get_volumetric_fog_ambient_inject(RID p_env) const;
+	bool environment_get_volumetric_fog_detail_enabled(RID p_env) const;
+	RID environment_get_volumetric_fog_detail_density_map(RID p_env) const;
+	float environment_get_volumetric_fog_detail_density_map_strength(RID p_env) const;
+	Vector3 environment_get_volumetric_fog_detail_density_map_offset(RID p_env) const;
+	Vector3 environment_get_volumetric_fog_detail_density_map_scale(RID p_env) const;
 
 	virtual void environment_set_volumetric_fog_volume_size(int p_size, int p_depth) = 0;
 	virtual void environment_set_volumetric_fog_filter_active(bool p_enable) = 0;
