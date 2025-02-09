@@ -19,6 +19,10 @@ layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
 layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 #endif
 
+#ifdef MODE_DETAIL
+layout(local_size_x = 4, local_size_y = 4, local_size_z = 4) in;
+#endif
+
 #include "../cluster_data_inc.glsl"
 #include "../light_data_inc.glsl"
 
@@ -212,6 +216,10 @@ layout(set = 0, binding = 19) uniform textureCubeArray sky_texture;
 layout(set = 0, binding = 19) uniform textureCube sky_texture;
 #endif
 #endif // MODE_COPY
+
+layout(rgba16f, set = 0, binding = 8) uniform restrict readonly image3D source_map;
+layout(rgba16f, set = 0, binding = 9) uniform restrict writeonly image3D dest_map;
+layout(set = 0, binding = 20) uniform texture3D detail_density_map;
 
 float get_depth_at_pos(float cell_depth_size, int z) {
 	float d = float(z) * cell_depth_size + cell_depth_size * 0.5; //center of voxels
@@ -780,6 +788,46 @@ void main() {
 	}
 
 	imageStore(dest_map, pos, imageLoad(source_map, pos));
+
+#endif
+
+#ifdef MODE_DETAIL
+
+layout(rgba16f, set = 0, binding = 8) uniform restrict readonly image3D source_map;
+layout(rgba16f, set = 0, binding = 9) uniform restrict writeonly image3D dest_map;
+layout(set = 0, binding = 20) uniform texture3D detail_density_map;
+
+void main() {
+    ivec3 pos = ivec3(gl_GlobalInvocationID.xyz);
+    if (any(greaterThanEqual(pos, params.fog_volume_size))) {
+        return;
+    }
+
+    vec4 fog = imageLoad(source_map, pos);
+    
+    // Convert fog position to world space
+    vec3 fog_unit_pos = vec3(pos) * (1.0 / vec3(params.fog_volume_size)) + (1.0 / vec3(params.fog_volume_size)) * 0.5;
+    fog_unit_pos.z = pow(fog_unit_pos.z, params.detail_spread);
+    
+    vec3 view_pos;
+    view_pos.xy = (fog_unit_pos.xy * 2.0 - 1.0) * mix(params.fog_frustum_size_begin, params.fog_frustum_size_end, vec2(fog_unit_pos.z));
+    view_pos.z = -params.fog_frustum_end * fog_unit_pos.z;
+    view_pos.y = -view_pos.y;
+    
+    vec3 world_pos = mat3(params.cam_rotation) * view_pos;
+    
+    // Sample detail map
+    vec3 detail_uv = (world_pos - params.detail_offset) * params.detail_scale;
+    float detail = textureLod(sampler3D(detail_density_map, linear_sampler), detail_uv, 0.0).r;
+    
+    // Apply detail strength
+    detail = mix(1.0, detail, params.detail_strength);
+    
+    // Multiply density by detail factor
+    fog.a *= detail;
+    
+    imageStore(dest_map, pos, fog);
+}
 
 #endif
 }
