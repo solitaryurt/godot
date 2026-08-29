@@ -9,4 +9,54 @@
 	</description>
 	<tutorials>
 	</tutorials>
+	<methods>
+		<method name="get_directional_light_buffer" qualifiers="const">
+			<return type="RID" />
+			<description>
+				Returns the borrowed uniform buffer containing current Forward+ directional-light data. It is only valid during compositor callbacks after opaque rendering and must not be freed.
+			</description>
+		</method>
+		<method name="get_directional_light_count" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of current Forward+ directional lights available during this render callback.
+			</description>
+		</method>
+		<method name="get_directional_shadow_atlas_texture" qualifiers="const">
+			<return type="RID" />
+			<description>
+				Returns the borrowed current Forward+ directional shadow atlas texture, or an invalid [RID] when no directional shadows are active. It is only valid during compositor callbacks after opaque rendering and must not be freed.
+			</description>
+		</method>
+		<method name="get_omni_light_buffer" qualifiers="const">
+			<return type="RID" />
+			<description>
+				Returns the borrowed storage buffer containing current Forward+ omni-light data. It is only valid during compositor callbacks after opaque rendering and must not be freed.
+			</description>
+		</method>
+		<method name="get_omni_light_count" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of current Forward+ omni lights in [method get_omni_light_buffer].
+			</description>
+		</method>
+		<method name="get_shadow_atlas_texture" qualifiers="const">
+			<return type="RID" />
+			<description>
+				Returns the borrowed current Forward+ positional-light shadow atlas texture, or an invalid [RID] when no atlas is available. It must not be freed.
+			</description>
+		</method>
+		<method name="get_spot_light_buffer" qualifiers="const">
+			<return type="RID" />
+			<description>
+				Returns the borrowed storage buffer containing current Forward+ spot-light data. It is only valid during compositor callbacks after opaque rendering and must not be freed.
+			</description>
+		</method>
+		<method name="get_spot_light_count" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the number of current Forward+ spot lights in [method get_spot_light_buffer].
+			</description>
+		</method>
+	</methods>
 </class>

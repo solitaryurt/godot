@@ -1277,6 +1277,8 @@ void LightStorage::update_light_buffers(RenderDataRD *p_render_data, const Paged
 	if (r_directional_light_count) {
 		RD::get_singleton()->buffer_update(directional_light_buffer, 0, sizeof(DirectionalLightData) * r_directional_light_count, directional_lights);
 	}
+	p_render_data->omni_light_count = omni_light_count;
+	p_render_data->spot_light_count = spot_light_count;
 }
 
 /* REFLECTION PROBE */
