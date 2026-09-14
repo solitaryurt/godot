@@ -139,6 +139,14 @@
 				Returns [code]true[/code] if the body collided, otherwise, returns [code]false[/code].
 			</description>
 		</method>
+		<method name="move_and_slide_with_delta">
+			<return type="bool" />
+			<param index="0" name="delta" type="float" />
+			<description>
+				Moves with the same collision, floor, and platform behavior as [method move_and_slide], using [param delta] seconds instead of the current process or physics callback duration. The duration must be finite and greater than zero. Platform displacement and [method get_real_velocity] use this duration too.
+				Use this when replaying historical commands or integrating explicit simulation steps. This advances the character only; callers remain responsible for coordinating the dynamic world's physics timeline. Call on the main thread while physics queries are available.
+			</description>
+		</method>
 	</methods>
 	<members>
 		<member name="floor_block_on_wall" type="bool" setter="set_floor_block_on_wall_enabled" getter="is_floor_block_on_wall_enabled" default="true">
